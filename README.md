@@ -38,22 +38,17 @@ Cada usuário possui suas próprias listas e tarefas, com autenticação segura.
     .venv\Scripts\activate
     ```
 
-3. **Instale as dependências**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. **Inicialize o banco de dados**
+3. **Inicialize o banco de dados**
     ```bash
     flask --app main init-db
     ```
 
-5. **Inicie o servidor**
+4. **Inicie o servidor**
     ```bash
     flask --app main run
     ```
 
-6. **Acesse a aplicação em:**  
+5. **Acesse a aplicação em:**  
     [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 ---
