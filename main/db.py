@@ -22,7 +22,7 @@ def close_db(e=None):
 
 def init_db():
     db = get_db()
-    with current_app.open_resource('tables.sql') as f:
+    with current_app.open_resource('todo.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
 @click.command('init-db')
