@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Usuário</title>
+</head>
+<body>
+    <h1>Editar Usuário</h1>
+    <form method="post">
+        <label>Nome:</label>
+        <input name="nome" value="{{ request.form.nome or '' }}" required><br>
+        <label>Email:</label>
+        <input name="email" type="email" value="{{ request.form.email or '' }}" required><br>
+        <label>Senha:</label>
+        <input name="senha" type="password" required><br>
+        <button type="submit">Salvar</button>
+    </form>
+    <a href="{{ url_for('auth.lista_usuarios') }}">Voltar</a>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>
