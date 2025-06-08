@@ -5,7 +5,7 @@ import click
 from flask import current_app, g
 
 
-def get_db():
+def get_db(): # Obtém a conexão com o banco de dados
     if 'db' not in g:
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
@@ -15,25 +15,25 @@ def get_db():
 
     return g.db
 
-def close_db(e=None):
+def close_db(e=None): # Fecha a conexão com o banco de dados
     db = g.pop('db', None)
     if db is not None:
         db.close()
 
-def init_db():
+def init_db(): # Inicializa o banco de dados
     db = get_db()
     with current_app.open_resource('todo.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
-@click.command('init-db')
+@click.command('init-db') # Comando para inicializar o banco de dados
 def init_db_command():
     init_db()
     click.echo('Banco de dados inicializado.')
 
-sqlite3.register_converter(
+sqlite3.register_converter( # Registra um conversor para o tipo de dado timestamp
     "timestamp", lambda v: datetime.fromisoformat(v.decode())
 )
 
-def init_app(app):
+def init_app(app): # Inicializa a aplicação com as configurações do banco de dados
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)

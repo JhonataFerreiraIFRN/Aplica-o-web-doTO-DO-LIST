@@ -12,21 +12,21 @@ bp = Blueprint('list',__name__)
 @bp.route('/')
 def index():
     db = get_db()
-    lista_de_tarefas = db.execute(
+    lista_de_tarefas = db.execute( # Obtém todas as listas de tarefas do banco de dados
         'SELECT * FROM LISTAS_DE_TAREFAS JOIN USUARIOS ON LISTAS_DE_TAREFAS.Id_Usuario = USUARIOS.Id_Usuario ORDER BY Id_Lista DESC' 
     ).fetchall()
-    return render_template('list/index.html', lista_de_tarefas=lista_de_tarefas)
+    return render_template('list/index.html', lista_de_tarefas=lista_de_tarefas) # Renderiza o template index.html com as listas de tarefas
 
-@bp.route('/<int:id_lista>/tarefas') 
+@bp.route('/<int:id_lista>/tarefas')  # Obtém as tarefas de uma lista específica
 @login_required
-def tarefas(id_lista):
+def tarefas(id_lista): # id_lista é o identificador da lista de tarefas
     db = get_db()
     tarefas = db.execute(
         '''SELECT id_tarefa, descricao, concluida, data_criacao, data_conclusao, Id_lista
            FROM TAREFAS WHERE Id_lista = ? ORDER BY id_tarefa DESC''',
-        (id_lista,)
-    ).fetchall()
-    return render_template('list/tarefas.html', tarefas=tarefas)
+        (id_lista,) # Obtém as tarefas da lista com o id especificado
+    ).fetchall() # fetchall() retorna todas as tarefas da lista
+    return render_template('list/tarefas.html', tarefas=tarefas) # Renderiza o template tarefas.html com as tarefas da lista
 
 @bp.route('/criar_lista', methods=('GET', 'POST'))
 @login_required
