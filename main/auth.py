@@ -55,9 +55,9 @@ def registro():
 def lista_usuarios():
     db = get_db()
     usuarios = db.execute(
-        'SLECT Id_Usuario, nome, email FROM USUARIOS ORDER BY Id_Usuario DESC'
+        'SELECT Id_Usuario, nome, email FROM USUARIOS ORDER BY Id_Usuario DESC'
     ).fetchall()
-    return render_template('auth/usuarios.html', usuarios=usuarios)
+    return render_template('auth/usuario.html', usuarios=usuarios)
 @bp.route('/usuario/<int:id_usuario>/editar', methods=('GET', 'POST'))
 @login_required
 def editar_usuario(id_usuario):

@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 
-def create_app(test_config=None):
+def create_app(test_config=None): # cria a aplicação Flask
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_mapping(
@@ -23,15 +23,15 @@ def create_app(test_config=None):
     def hello():
         return 'Ola, mundo do Batman!'
     
-    from . import db  
+    from . import db  # importa o módulo db
     db.init_app(app)  
 
-    from . import auth  
-    app.register_blueprint(auth.bp)  
+    from . import auth   # importa o módulo auth
+    app.register_blueprint(auth.bp)   # registra o blueprint de autenticação
     
-    from . import list  
-    app.register_blueprint(list.bp) 
-    app.add_url_rule('/',endpoint='index')  
+    from . import list  # importa o módulo list
+    app.register_blueprint(list.bp) # registra o blueprint de lista
+    app.add_url_rule('/',endpoint='index')  # define a rota raiz para o index
 
     return app
 

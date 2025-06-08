@@ -1,32 +1,29 @@
 {% extends 'base.html' %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Usuários</title>
-</head>
-<body>
-    <h1>Lista de Usuários</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Ações</th>
-        </tr>
-        {% for usuario in usuarios %}
-        <tr>
-            <td>{{ usuario['Id_Usuario'] }}</td>
-            <td>{{ usuario['nome'] }}</td>
-            <td>{{ usuario['email'] }}</td>
-            <td>
-                <a href="{{ url_for('auth.editar_usuario', id_usuario=usuario['Id_Usuario']) }}">Editar</a>
-                <form action="{{ url_for('auth.excluir_usuario', id_usuario=usuario['Id_Usuario']) }}" method="post" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Tem certeza que deseja excluir?');">Excluir</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <a href="{{ url_for('auth.registro') }}">Novo Usuário</a>
-</body>
-</html>
+{% block header %}<h1>Usuários</h1>{% endblock %}
+{% block content %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in usuarios %}
+      <tr>
+        <td>{{usuario ['Id_Usuario']}}</td>
+        <td>{{ usuario['nome'] }}</td>
+        <td>{{ usuario['email'] }}</td>
+        <td>
+          <a href="{{ url_for('auth.editar_usuario', id_usuario=usuario['Id_Usuario']) }}" class="btn btn-warning btn-sm">Editar</a>
+          <form method="post" action="{{ url_for('auth.excluir_usuario', id_usuario=usuario['Id_Usuario']) }}" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
