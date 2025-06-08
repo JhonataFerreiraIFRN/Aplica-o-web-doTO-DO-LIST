@@ -10,6 +10,16 @@ from main.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+
+    return wrapped_view
+
+
 @bp.route('/registro', methods=('GET', 'POST'))
 def registro():
     if request.method == 'POST':
@@ -39,6 +49,51 @@ def registro():
                 return redirect(url_for('auth.login'))
         flash(erro)
     return render_template('auth/registro.html')
+
+@bp.route('/usuario', methods=('GET', 'POST'))
+@login_required
+def lista_usuarios():
+    db = get_db()
+    usuarios = db.execute(
+        'SLECT Id_Usuario, nome, email FROM USUARIOS ORDER BY Id_Usuario DESC'
+    ).fetchall()
+    return render_template('auth/usuarios.html', usuarios=usuarios)
+@bp.route('/usuario/<int:id_usuario>/editar', methods=('GET', 'POST'))
+@login_required
+def editar_usuario(id_usuario):
+    if request.method == 'POST':
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = request.form['senha']
+        db = get_db()
+        erro = None
+
+        if not nome:
+            erro = 'Nome é obrigatório.'
+        elif not email:
+            erro = 'Email é obrigatório.'
+
+        if erro is None:
+            try:
+                db.execute(
+                    'UPDATE USUARIOS SET nome = ?, email = ?, senha = ? WHERE Id_Usuario = ?',
+                    (nome, email, generate_password_hash(senha), id_usuario)
+                )
+                db.commit()
+            except db.IntegrityError:
+                erro = f'Usuário {nome} já existe.'
+            else:
+                return redirect(url_for('auth.lista_usuarios')) # redireciona para a lista de usuários
+        flash(erro)
+    return render_template('auth/editar_usuario.html', id_usuario=id_usuario)
+
+@bp.route('/usuario/<int:id_usuario>/excluir', methods=('POST',))
+@login_required
+def excluir_usuario(id_usuario):
+    db = get_db()
+    db.execute('DELETE FROM USUARIOS WHERE Id_Usuario = ?', (id_usuario,))
+    db.commit()
+    return redirect(url_for('auth.lista_usuarios'))
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
@@ -81,11 +136,3 @@ def logout():
     session.clear()
     return redirect(url_for('auth.login'))
 
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
-        return view(**kwargs)
-
-    return wrapped_view
