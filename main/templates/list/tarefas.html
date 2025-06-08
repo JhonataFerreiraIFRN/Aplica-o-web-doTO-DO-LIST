@@ -8,7 +8,6 @@
 {% block content %}
   {% for tarefa in tarefas %}
     <article>
-      <h2>{{ tarefa['nome'] }}</h2>
       <p>{{ tarefa['descricao'] }}</p>
       <p>
         {% if tarefa['concluida'] %}

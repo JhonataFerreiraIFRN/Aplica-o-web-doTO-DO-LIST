@@ -26,6 +26,6 @@ CREATE TABLE TAREFAS (
     FOREIGN KEY (Id_lista) REFERENCES LISTAS_DE_TAREFAS(Id_lista)
 );
 
-CREATE DATABASE TODOLIST
+
 
 -- Obs: Cadastre de baixo para cima, ordem de precedência
